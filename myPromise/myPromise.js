@@ -29,6 +29,9 @@ const handleTargetPromise = function(promise2, result, resolve, reject) {
     }
 }
 
+const isPromise = function(promise) {
+    return promise&&(typeof promise.then==='function') ? true : false;
+}
 class MyPromise {
     constructor(execu) {
         this.status = PENDING;//default status
@@ -83,7 +86,32 @@ class MyPromise {
                 }
             }); 
             return promise2;
+        };
+        //grammer suger for then.
+        this.catch = function(errorHandle) {
+            this.then(null, errorHandle);
         }
         execu(resolve, reject);
     }
+}
+
+//all are fulfilled then fulfilled, once one promise rejected then rejected
+//return the result array, keep the promise order in the queue
+MyPromise.all = function (promises) {
+    let count = 0;
+    return new MyPromise((resolve, reject)=> {
+        let result = [];
+        for(let i=0, len=promises.length; i<len;i++) {
+            let promise = promises[i];
+            promise.then((value)=>{
+                result[i] = value;
+                if(++count === len) {
+                    resolve(result);
+                }
+            }, (reason)=>{
+                result[i] = reason;
+                reject(reason);
+            });
+        }
+    });
 }
