@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head></head>
+    <body>
+        <script type="text/javascript" src="myPromise.js" /></script>
+        <script type="text/javascript">
+            const date = new Date();
+            let p1 = new MyPromise((resolve, reject)=> {
+                setTimeout(()=> {
+                    resolve('success');
+                }, 1000);
+            })
+            let p2 = p1.then((value)=> {
+                const past = new Date() - date;
+                console.log(past + ': '+value);
+                return new MyPromise((resolve, reject)=>{reject('12313')});
+            }, (reason)=> {
+                const past = new Date() - date;
+                console.log(past + ': '+reason);
+            });
+            p2.then((value)=> {
+                console.log('p2:success');
+            },(reason)=> {
+                console.log('p2:rejected');
+            })
+        </script>
+    </body>
+</html>
