@@ -37,16 +37,40 @@
             });
 
             var p5 = new MyPromise((resolve, reject)=> {
-                setTimeout(()=> {resolve(5)},8000);
+                setTimeout(()=> {resolve(5)},1000);
             });
 
             var p6 = new MyPromise((resolve, reject)=> {
                 resolve(6)
             });
 
-            var p = MyPromise.all([p3,p4,p5,p6])
-            console.log(p);
+            var pAll = MyPromise.all([p3,p4,p5,p6])
+            setTimeout(()=>{
+                console.log('pAll: '+JSON.stringify(pAll));
+            },2000);
 
+            console.log('testing Promise.race');
+
+            var p11 = new MyPromise((resolve, reject)=> {
+                reject(1);
+            });
+
+            var p12 = new MyPromise((resolve, reject)=> {
+                resolve(2);
+            });
+
+            var p13 = new MyPromise((resolve, reject)=> {
+                setTimeout(()=> {reject(3)},1000);
+            });
+
+            var p14 = new MyPromise((resolve, reject)=> {
+                resolve(4)
+            });
+
+            var pRace = MyPromise.race([p11,p12,p13,p14, new Error('1231313')]);
+            setTimeout(()=>{
+                console.log('pRace: '+JSON.stringify(pRace));
+            },500);
         </script>
     </body>
 </html>
