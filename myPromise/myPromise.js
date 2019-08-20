@@ -101,17 +101,50 @@ MyPromise.all = function (promises) {
     let count = 0;
     return new MyPromise((resolve, reject)=> {
         let result = [];
+        let resolveData = function(index, value) {
+            result[index] = value;
+            if(++count === promises.length) {
+                resolve(result);
+            }
+        }
         for(let i=0, len=promises.length; i<len;i++) {
             let promise = promises[i];
-            promise.then((value)=>{
-                result[i] = value;
-                if(++count === len) {
-                    resolve(result);
-                }
-            }, (reason)=>{
-                result[i] = reason;
-                reject(reason);
-            });
+            if(isPromise(promise)) {
+                promise.then((value)=>{
+                    resolveData(i, value);
+                }, reject);
+            } else {
+                resolveData(i, promise);
+            }
         }
     });
 }
+
+//one fulfilled then fulfilled one rejected then rejected
+//return the result of fastest promise
+MyPromise.race = function(promises) {
+    let promise2 = new MyPromise((resolve,reject)=> {
+        for(let i=0,len=promises.length;i<len;i++) {
+            let promise = promises[i];
+            if(isPromise(promise)) {
+                promise.then(resolve,reject);
+            } else {
+                //because of promise.then is a async method, used setTimeout in it, so also use setTimeout here for no-promise object, so can keep the order. 
+                setTimeout(()=>{
+                    resolve(promise);
+                });
+            }
+        }
+    });
+    return promise2;
+}
+MyPromise.deferred = function() {
+    let dfd = {}
+    dfd.promise = new MyPromise(function(resolve, reject) {
+      dfd.resolve = resolve
+      dfd.reject = reject
+    })
+    return dfd
+}
+
+module.exports = MyPromise;
