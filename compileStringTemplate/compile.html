@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head></head>
+<body>
+    <div id="outer">
+
+    </div>
+    <script src ="string_template.js"></script>
+    <script>
+        var temp1 =`<ul>
+            <%for(var i =0;i<data.length;i++){%>
+            <li>
+            <% if(data[i].name=='xx'){%>
+            <% if(data[i].name=='yy'){%>
+            <span>上岛咖啡就是宽度</span>
+            <%}%>
+            <span>萨克的积分卡萨</span>
+            <%}%>
+            <%=data[i].name%>
+            </li>
+            <%}%>
+        </ul>`;
+        var data = [{name:"大型"},{name:"历练"},{name:"尾款"},{name:'xx'},{name:'yyy'}];
+        var parse = eval(compile1(temp1));
+        var result=parse(data);
+        console.log(result);
+        document.getElementById("outer").innerHTML = result;
+    </script>
+</body>
+
+</html>
