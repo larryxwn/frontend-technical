@@ -1,0 +1,50 @@
+基于http协议的请求方法：
+
+GET/POST/PUT/PATCH/DELETE/ 等。
+• GET：读取（Read）
+• POST：新建（Create）
+• PUT：更新（Update）
+• PATCH：更新（Update），通常是部分更新
+• DELETE：删除（Delete）
+
+
+
+RESTful架构，就是目前最流行的一种互联网软件架构。它结构清晰、符合标准、易于理解、扩展方便，所以正得到越来越多网站的采用。
+客户端请求资源，GET/resource?  前面的动词是http请求的方法
+服务器返回 状态+内容，注意状态必须准确，例如错误就必须返回4XX，而不是2XX。
+
+
+
+来自 <http://www.ruanyifeng.com/blog/2011/09/restful.html> 
+
+客户端用到的手段，只能是HTTP协议。具体来说，就是HTTP协议里面，四个表示操作方式的动词：GET、POST、PUT、DELETE。它们分别对应四种基本操作：GET用来获取资源，POST用来新建资源（也可以用于更新资源），PUT用来更新资源，DELETE用来删除资源。
+
+来自 <http://www.ruanyifeng.com/blog/2011/09/restful.html> 
+
+
+REST四个基本原则：
+1.使用HTTP动词：GET POST PUT DELETE；
+2.无状态连接，服务器端不应保存过多上下文状态，即每个请求都是独立的；
+3.为每个资源设置URI；
+4.通过XML JSON进行数据传递；
+实现上述原则的架构即可称为RESTFul架构。
+1.互联网环境下，任何应用的架构和API可以被快速理解；
+2.分布式环境下，任何请求都可以被发送到任意服务器；
+3.异构环境下，任何资源的访问和使用方式都统一；
+
+来自 <http://www.ruanyifeng.com/blog/2011/09/restful.html> 
+
+
+HTTP的幂等性
+
+HTTP GET方法用于获取资源，不应有副作用，所以是幂等的。比如：GET  xxxx/account/123456
+不会改变资源的状态，不论调用一次还是N次都没有副作用。请注意，这里强调的是一次和N次具有相同的副作用，而不是每次GET的结果相同。GET xxxx/latest-news这个HTTP请求可能会每次得到不同的结果，但它本身并没有产生任何副作用，因而是满足幂等性的。
+
+HTTP DELETE方法用于删除资源，有副作用，但它应该满足幂等性。比如：DELETE /article/4231, 调用一次和N次对系统产生的副作用是相同的，即删掉id为4231的帖子；因此，调用者可以多次调用或刷新页面而不必担心引起错误。
+
+比较容易混淆的是HTTP POST和PUT。POST和PUT的区别容易被简单地误认为“POST表示创建资源，PUT表示更新资源”；而实际上，二者均可用于创建资源，更为本质的差别是在幂等性方面。
+
+POST所对应的URI并非创建的资源本身，而是资源的接收者。比如：POST xxx.forum.com/articles的语义是在www.forum.com/articles下创建一篇帖子，HTTP响应中应包含帖子的创建状态以及帖子的URI。两次相同的POST请求会在服务器端创建两份资源，它们具有不同的URI；所以，POST方法不具备幂等性。
+而PUT所对应的URI是要创建或更新的资源本身。比如：PUT xxx.forum/articles/4231的语义是创建或更新ID为4231的帖子。对同一URI进行多次PUT的副作用和一次PUT是相同的；因此，PUT方法具有幂等性。
+
+在介绍了几种操作的语义和幂等性之后，我们来看看如何通过Web API的形式实现前面所提到的取款功能。很简单，用POST /tickets来实现create_ticket；用PUT /accounts/account_id/ticket_id?amount=xxx来实现idempotent_withdraw。值得注意的是严格来讲amount参数不应该作为URI的一部分，真正的URI应该是/accounts/account_id/ticket_id，而amount应该放在请求的body中。这种模式可以应用于很多场合，比如：论坛网站中防止意外的重复发帖。
