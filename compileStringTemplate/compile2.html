@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head></head>
+<body>
+    <div id="outer">
+
+    </div>
+    <script>
+        var templateStr = 'i am {{name}},age {{age}},job {{job}} ';
+        var data = {
+            name:'xbd',
+            age:18,
+            job:'CTO'
+        }
+        function templateFunc(str,data){
+            let computed = str.replace(/\{\{(\w+)\}\}/g,function (match,key) {
+                return data[key];
+            })
+            return computed;
+        }
+        document.getElementById("outer").innerHTML = templateFunc(templateStr, data);
+    </script>
+</body>
+
+</html>
