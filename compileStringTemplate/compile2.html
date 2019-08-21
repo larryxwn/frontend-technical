@@ -14,6 +14,10 @@
         }
         function templateFunc(str,data){
             let computed = str.replace(/\{\{(\w+)\}\}/g,function (match,key) {
+                //match is the match str in source string, key is the first content in () in Regular.
+                //match: {{name}} key: name
+                //match: {{age}} key: age
+                //match: {{job}} key: job
                 return data[key];
             })
             return computed;
