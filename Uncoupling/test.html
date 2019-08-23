@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div onclick="proxy(myClick, successFn, event, 100000)" style="background-color: red">myTest</div>
+    <script src="furion.js"></script>
+    <script src="proxy.js"></script>
+    <script type="text/javascript">
+        const successFn = function(time) {
+            let arr = [];
+            for(let i=0;i<time;i++) {
+                arr.push(i);
+            }
+        }
+        const myClick = function(event, time) {
+            setTimeout(()=> {proxyAsync(successFn, time)}, 1000);
+        }
+    </script>
+</body>
+</html>
