@@ -1,0 +1,35 @@
+window.furion = {
+   // 存储item的开始时间
+   itemStartTime : {},
+
+   // 记录当前item的开始时间
+   start : function(item){
+        this.itemStartTime[item] = new Date().getTime();
+         console.log('starting...');
+   },
+
+   // 记录item的结束时间并上报数据
+   end : function(item){
+       if (this.itemStartTime[item]) {
+              var start = this.itemStartTime[item];
+
+          // 用当前时间减去前面该item记录的起始时间
+                 var time = new Date().getTime() - start;
+                 console.log('ending...');/*
+          // 计算完成删除该item
+                 delete this.itemStartTime[item];
+
+                 var data = {
+                       "app_id": "831448A8EB3649FB84732DE952245D27",
+                       "url": "http%3A%2F%2Fmodeling-gamma.inhuawei.com%2F",
+                       "item": item, // 当前自定义的操作项
+                       "exec_time": time, // 执行耗时
+                       "userId": "c00305149", // 登录用户
+                       "time": "2019-08-19 14:22:34" // 发生时间
+                 };
+
+          // 上报数据到furion
+                 furionServer.post("https://cida-feedback.inhuawei.com/furiondataserver/api/pages", data);*/
+          }
+   }
+}
